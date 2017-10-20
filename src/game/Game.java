@@ -20,14 +20,14 @@ public class Game {
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         if(!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
+            throw new IllegalStateException("Failed to initialize GLFW...");
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         // Create the window
-        window = glfwCreateWindow(300, 300, "Engine2D", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "Engine2D", NULL, NULL);
         if(window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
+            throw new RuntimeException("Failed to create the window...");
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true);
