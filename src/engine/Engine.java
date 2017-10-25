@@ -4,7 +4,7 @@ import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.input.Input;
 
-import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * Kaden Cringle
@@ -18,13 +18,13 @@ public class Engine implements Runnable {
     private Window window;
     private Renderer renderer;
     private Input input;
-    private AbstractGame game;
+    private IGame game;
     private int width = 320, height = 240;
     private float scale = 3.0f;
     private boolean running = false;
     private final double FPS = 1.0 / 60.0;
 
-    public Engine(AbstractGame game) {
+    public Engine(IGame game) {
         this.game = game;
         window = new Window(this);
         renderer = new Renderer(this);
@@ -43,9 +43,9 @@ public class Engine implements Runnable {
     public void run() {
         running = true;
         boolean render;
-        double start = 0.0;
+        double start;
         double finish = System.nanoTime() / 1000000000.0;
-        double elapsed = 0.0;
+        double elapsed;
         double unprocessed = 0.0;
         double frameTime = 0.0;
         int frames = 0, fps = 0;
@@ -72,7 +72,7 @@ public class Engine implements Runnable {
                 renderer.clear();
                 game.render(this, renderer);
                 renderer.processSprites();
-                renderer.renderText("FPS: " + fps, 0, 0, 0xFF00FF00);
+                renderer.renderText("fps: " + fps, 0, 0, 0xFF00FF00);
                 window.update();
                 frames++;
             } else {

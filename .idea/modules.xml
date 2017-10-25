@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Engine2D.iml" filepath="$PROJECT_DIR$/Engine2D.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Font Creator/Font Creator.iml" filepath="$PROJECT_DIR$/Font Creator/Font Creator.iml" />
     </modules>
   </component>
 </project>

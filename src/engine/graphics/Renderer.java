@@ -31,10 +31,9 @@ public class Renderer {
     }
 
     public void renderText(String text, int xPos, int yPos, int color) {
-        text = text.toUpperCase();
         int offset = 0;
         for(int i = 0; i < text.length(); i++) {
-            int character = text.codePointAt(i) - 32;
+            int character = text.codePointAt(i);
             for(int y = 0; y < font.getImage().getHeight(); y++)
                 for(int x = 0; x < font.getWidths()[character]; x++)
                     if(font.getImage().getPixels()[(x + font.getOffsets()[character]) + y * font.getImage().getWidth()] == 0xFFFFFFFF)

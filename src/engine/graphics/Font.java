@@ -15,8 +15,8 @@ public class Font {
 
     private Font(String path) {
         image = new Sprite(path);
-        offsets = new int[59];
-        widths = new int[59];
+        offsets = new int[256];
+        widths = new int[256];
         int character = 0;
         for(int i = 0; i < image.getWidth(); i++) {
             if(image.getPixels()[i] == 0xFF0000FF)
