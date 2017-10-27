@@ -20,15 +20,17 @@ import java.util.ArrayList;
 public class GameManager implements IGame {
 
     private ArrayList<GameObject> objects = new ArrayList<>();
-    private Player player;
-    private SpriteSheet spriteTest;
+//    private Player player;
+    private Sprite sprite;
+    private Sprite sprite2;
     private AudioClip audioTest;
 
     public GameManager() {
-        player = new Player(new Sprite("/alphaTest.png"), new Vector2f(0, 0));
-        player.getSprite().setAlpha(true);
-        objects.add(player);
-        spriteTest = new SpriteSheet("/rock.png", 16, 16);
+//        player = new Player(new Sprite("/alphaTest.png"), new Vector2f(0, 0));
+//        player.getSprite().setAlpha(true);
+//        objects.add(player);
+        sprite = new Sprite("/light.png");
+        sprite2 = new Sprite("/light2.png");
         audioTest = new AudioClip("/test.wav");
     }
 
@@ -49,9 +51,14 @@ public class GameManager implements IGame {
 
     @Override
     public void render(Engine engine, Renderer renderer) {
-        renderer.setSort(1);
-        renderer.renderSpriteFromSheet(spriteTest, (int) x, 0, 144, 104);
+        for(int x = 0; x < sprite.getWidth(); x++) {
+            for(int y = 0; y < sprite.getHeight(); y++) {
+                renderer.setLightMap(x, y, sprite.getPixels()[x + y * sprite.getWidth()]);
+            }
+        }
         renderer.setSort(0);
+        //renderer.renderSprite(sprite, 200, 175);
+        renderer.renderSprite(sprite2, engine.getInput().getMousePosX() - 16, engine.getInput().getMousePosY() - 16);
         for (GameObject object : objects)
             object.render(engine, renderer);
     }

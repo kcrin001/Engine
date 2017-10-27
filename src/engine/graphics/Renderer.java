@@ -19,6 +19,9 @@ public class Renderer {
     private int width, height;
     private int[] pixels;
     private int[] zBuffer;
+    private int[] lm;
+    private int[] lb;
+    private int ambientColor = 0xFF6B6B6B;
     private int sort = 0;
     private boolean processing = false;
 
@@ -28,6 +31,8 @@ public class Renderer {
         height = engine.getHeight();
         pixels = ((DataBufferInt) engine.getWindow().getImage().getRaster().getDataBuffer()).getData();
         zBuffer = new int[pixels.length];
+        lm = new int[pixels.length];
+        lb = new int[pixels.length];
     }
 
     public void renderText(String text, int xPos, int yPos, int color) {
@@ -80,6 +85,12 @@ public class Renderer {
             SpriteRequest sr = spriteRequests.get(i);
             setSort(sr.getSort());
             renderSprite(sr.getSprite(), sr.getXPos(), sr.getYPos());
+        }
+        for(int i = 0; i < pixels.length; i++) {
+            float r = ((lm[i] >>  16) & 0xFF) / 255.0f;
+            float g = ((lm[i] >>  8) & 0xFF) / 255.0f;
+            float b = (lm[i] & 0xFF) / 255.0f;
+            pixels[i] = ((int)(((pixels[i] >> 16) & 0xFF) * r) << 16 | (int)(((pixels[i] >> 8) & 0xFF) * g) << 8 | (int)((pixels[i] & 0xFF) * b));
         }
         spriteRequests.clear();
         processing = false;
@@ -158,6 +169,8 @@ public class Renderer {
         for(int i = 0; i < pixels.length; i++) {
             pixels[i] = 0x00;
             zBuffer[i] = 0x00;
+            lm[i] = ambientColor;
+            lb[i] = 0x00;
         }
     }
 
@@ -176,8 +189,18 @@ public class Renderer {
             int blendedR = ((previousColor >> 16) & 0xFF) - (int) ((((previousColor >> 16) & 0xFF) - ((color >> 16) & 0xFF)) * (alpha / 255.0f));
             int blendedG = ((previousColor >> 8) & 0xFF) - (int) ((((previousColor >> 8) & 0xFF) - ((color >> 8) & 0xFF)) * (alpha / 255.0f));
             int blendedB = (previousColor & 0xFF) - (int) (((previousColor & 0xFF) - (color & 0xFF)) * (alpha / 255.0f));
-            pixels[index] = (255 << 24 | blendedR << 16 | blendedG << 8 | blendedB);
+            pixels[index] = (blendedR << 16 | blendedG << 8 | blendedB);
         }
+    }
+
+    public void setLightMap(int x, int y, int color) {
+        if(x < 0 || x >= width || y < 0 || y >= height)
+            return;
+        int baseColor = lm[x + y * width];
+        int maxR = Math.max((baseColor >> 16) & 0xFF, (color >> 16) & 0xFF);
+        int maxG = Math.max((baseColor >> 8) & 0xFF, (color >> 8) & 0xFF);
+        int maxB = Math.max(baseColor & 0xFF, color & 0xFF);
+        lm[x + y * width] = (maxR << 16 | maxG << 8 | maxB);
     }
 
     public int getSort() {
